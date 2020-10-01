@@ -6,7 +6,6 @@ jsonheaders = {"Content-Type": "application/json", 'Pragma': 'no-cache'}
 
 auth = 'https://authserver.mojang.com/authenticate'
 
-nfa = 0
 hits = 0
 bad = 0
 checks = 0
@@ -43,4 +42,4 @@ for line in lines:
     else:
         print('[' + user + ':' + pasd + '] Bad')
         bad += 1
-
+print(' Hits : ' + hits '\n Bads : ' + bad + '\n Total Checked : ' + checks)
