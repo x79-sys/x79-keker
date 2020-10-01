@@ -24,7 +24,7 @@ def check(user, password):
             'password': password,
             'requestUser': 'true'
         })
-    r = requests.post(url=auth, json=payload, headers=jsonheaders, proxies = proxies)
+    r = requests.post(url=auth, json=payload, headers=jsonheaders)
     checks + 1
     if r.status_code == 200:
         return 1
