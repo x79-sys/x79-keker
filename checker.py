@@ -42,4 +42,4 @@ for line in lines:
     else:
         print('[' + user + ':' + pasd + '] Bad')
         bad += 1
-print(' Hits : ' + hits '\n Bads : ' + bad + '\n Total Checked : ' + checks)
+print(' Hits : ' + hits + '\n Bads : ' + bad + '\n Total Checked : ' + checks)
