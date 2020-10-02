@@ -60,7 +60,6 @@ def authpLess(user, password):
             return 0
     except:
         return 2
-    checks + 1
 
 def check():
     print('Please type the name of your combo list!\n')
