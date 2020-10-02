@@ -3,6 +3,7 @@ import requests
 from itertools import cycle
 import traceback
 
+
 def get_proxies():
     url = 'https://free-proxy-list.net/'
     response = requests.get(url)
