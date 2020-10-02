@@ -60,11 +60,22 @@ def authpLess(user, password):
     except:
         return 2
 
+
 def check():
     print('Please type the name of your combo list!\n')
     combo = input('> ')
     with open(combo + ".txt") as f:
+    file = input('Please enter the name of your file!\n> ')
+    while not file.endswith('.txt'):
+        print("Error: File must be a txt file. Please try again.")
+        file = input('Please enter the name of your file!\n> ')
+    try:
+        with open(file) as f:
         lines = f.readlines()
+    except FileNotFoundError:
+        print(f"Couldn't find a file named '{file}'. Please double check your spelling, and try again.")
+        input("Press enter to exit.")
+        sys.exit(0)
     
     for line in lines:
         a = line.split(':')
