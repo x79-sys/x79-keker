@@ -114,7 +114,12 @@ def printMenu():
         else:
             print('[' + user + ':' + pasd + '] Miss')
 
-print('Menu\n [A] Minecraft w/ Free Proxy Scraper(skips line if proxy doesn\'t work)\n [B] Minecraft w/o Proxies\n [G] is Chrusher chris into men?\n')
+async def main():
+    printMenu()
+    choice = input('> ')
+    while choice not in ('A', 'B', 'G'):
+        print(f"Error: Inputted value of '{choice}' not an option. Please try again.")
+        printMenu()
 choice = input('> ')
 if choice == 'A':
     check()
@@ -122,5 +127,5 @@ elif choice == 'B':
     checkpLess()
 elif choice == 'G':
     print('Yes crusher chris is into men\n :D\n :D\n :D')
-else:
-    print('not an option retard')
+
+asyncio.get_event_loop().run_until_complete(main())
