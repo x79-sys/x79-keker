@@ -96,11 +96,13 @@ def check():
             print(f"[{user}:{passwrd}]  Miss")
 
 
-def checkpLess():
-    print('Please type the name of your combo list!\n')
-    combo = input('> ')
-    with open(combo + ".txt") as f:
-        lines = f.readlines()
+def printMenu():
+    print(
+        "Menu:\n",
+        " [A] Minecraft w/ Free Proxy Scraper (skips line if proxy doesn't work)\n",
+        " [B] Minecraft w/o Proxies\n",
+        " [G] is Chrusher chris into men?\n"
+    )
     
     for line in lines:
         a = line.split(':')
