@@ -40,7 +40,6 @@ def auth(user, password):
             return 0
     except:
         return 2
-    checks + 1
 
 def authpLess(user, password):
     payload = ({
