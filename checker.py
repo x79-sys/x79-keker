@@ -1,5 +1,7 @@
 import requests
 import time
+import asyncio
+import sys
 from itertools import cycle
 
 import fproxy
