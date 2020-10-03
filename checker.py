@@ -4,7 +4,7 @@ import asyncio
 import sys
 from itertools import cycle
 
-import fproxy
+import proxy
 
 dat = True
 jsonheaders = {"Content-Type": "application/json", 'Pragma': 'no-cache'}
